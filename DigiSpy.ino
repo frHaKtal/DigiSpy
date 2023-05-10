@@ -10,7 +10,7 @@
 
 SoftSerial sim800l(1, 2); // RX,TX for Arduino and for the module it's TXD RXD, they should be inverted
 int test = 0;
-String phone = "+336xxxxxxxx"; // your phone numbers
+String phone = "+33xxxxxxxxx"; // your phone numbers
 
 void setup()
 {
@@ -19,8 +19,10 @@ void setup()
   delay(1000);
   sim800l.println("AT+CLIP=1\r\n");//enable caller id
   delay(1000);
-  sendATcommand("AT+CLIP=1", "OK", 2000);
+  //sendATcommand("AT+CLIP=1", "OK", 2000);
   sim800l.print("AT+CMIC=2,15\n");
+  delay(1000);
+  sim800l.println("AT+IPR=9600");
   delay(1000);
   sim800l.print("AT+CWHITELIST=3,1,"); sim800l.println(phone); //Phone number to whitelist
   delay(1000);
@@ -29,7 +31,7 @@ void setup()
 void loop()
 {
 
-while ((sendATcommand("AT+CREG?", "+CREG: 0,1", 500) || sendATcommand("AT+CREG?", "+CREG: 0,5", 500)) == 0);
+//while ((sendATcommand("AT+CREG?", "+CREG: 0,1", 500) || sendATcommand("AT+CREG?", "+CREG: 0,5", 500)) == 0);
 
   if (test == 0){
     test=1;
