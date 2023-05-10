@@ -33,7 +33,7 @@ void loop()
 
 //while ((sendATcommand("AT+CREG?", "+CREG: 0,1", 500) || sendATcommand("AT+CREG?", "+CREG: 0,5", 500)) == 0);
 
-  if (test == 0){
+  if (test == 0 && (sendATcommand("AT+CREG?", "+CREG: 0,1", 500) || sendATcommand("AT+CREG?", "+CREG: 0,5", 500)) == 1){
     test=1;
     SendSMS(phone,"DigiSpy is Online...");
   }
