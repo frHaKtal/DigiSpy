@@ -7,13 +7,29 @@
 //                          by _frHaKtal_
 
 #include <SoftSerial.h>
+#include <avr/wdt.h>
 
 SoftSerial sim800l(1, 2); // RX,TX for Arduino and for the module it's TXD RXD, they should be inverted
-int test = 0;
+int test_connect = 0;
+int signal_connected = 0;
+int signal_lost = 0;
 String phone = "+33xxxxxxxxx"; // your phone numbers
+
+void reboot(
+    ) {
+
+cli();
+WDTCR = 0xD8 | WDTO_1S;
+sei();
+
+wdt_reset();
+while (true) {}
+
+} //reboot
 
 void setup()
 {
+  wdt_disable();
   sim800l.begin(9600);   //Module baude rate, this is on max, it depends on the version
   sim800l.println("AT\r\n");
   delay(1000);
@@ -26,20 +42,25 @@ void setup()
   delay(1000);
   sim800l.print("AT+CWHITELIST=3,1,"); sim800l.println(phone); //Phone number to whitelist
   delay(1000);
+  if (sendATcommand("AT+CREG?", "+CREG: 0,1", 500) || sendATcommand("AT+CREG?", "+CREG: 0,5", 500) == 1) { //test if signal is connected
+    signal_connected = 1;
+    SendSMS(phone,"DigiSpy is Online..."); //sending sms for connection ok
+  }else{
+    
+  }
+  
 }
  
 void loop()
 {
-
-//while ((sendATcommand("AT+CREG?", "+CREG: 0,1", 500) || sendATcommand("AT+CREG?", "+CREG: 0,5", 500)) == 0);
-
-  if (test == 0 && (sendATcommand("AT+CREG?", "+CREG: 0,1", 500) || sendATcommand("AT+CREG?", "+CREG: 0,5", 500)) == 1){
-    test=1;
-    SendSMS(phone,"DigiSpy is Online...");
+  if (signal_connected == 1 && sendATcommand("AT+CREG?", "+CREG: 0,1", 500) || sendATcommand("AT+CREG?", "+CREG: 0,5", 500) == 0) { //if lost signal
+    reboot();
   }
-sim800l.print("ATA\r");
+
+sim800l.print("ATA\r"); //hang up
 delay(1000);
 }
+
 
 void SendSMS(String number, String text)
 {
