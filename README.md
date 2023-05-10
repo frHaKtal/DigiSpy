@@ -8,3 +8,5 @@ it's a module based on a sim800l and a digispark, designed for a minimal cost pr
 ![Screenshot](Schematic.png)
 First version:
 ![Screenshot](first_test.png)
+Final version:
+![Screenshot](final_version.png)
