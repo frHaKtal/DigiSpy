@@ -10,3 +10,5 @@ First version:
 ![Screenshot](first_test.png)
 Final version:
 ![Screenshot](final_version.png)
+![Screenshot](final1.png)
+![Screenshot](final2.png)
